@@ -1,0 +1,20 @@
+    # cpu.ram.write(0x00ff, 0x02) # LD A, 255
+    # cpu.ram.write(0x0100, 0x01)
+    # cpu.ram.write(0x0101, 0xff)
+    # cpu.ram.write(0x0102, 0x00)
+    
+    # cpu.ram.write(0x0103, 0x02) # LD B, 1
+    # cpu.ram.write(0x0104, 0x02)
+    # cpu.ram.write(0x0105, 0x01)
+    # cpu.ram.write(0x0106, 0x00)
+    
+    # cpu.ram.write(0x0107, 0x03) # ADD A, B
+    # cpu.ram.write(0x0108, 0x01)
+    # cpu.ram.write(0x0109, 0x02)
+    # cpu.ram.write(0x010A, 0x00)
+    
+    # # cpu.ram.write(0x010B, 0x0a) # JMP 00 FF
+    # # cpu.ram.write(0x010C, 0x00)
+    # # cpu.ram.write(0x010D, 0xFF)
+    
+    # cpu.ram.write(0x010E, 0xff)

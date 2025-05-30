@@ -1,0 +1,17 @@
+{
+    "x": 764,
+    "y": 564,
+    "width": 30,
+    "height": 30,
+    "visible": true,
+    "color_on": [
+        255,
+        0,
+        0
+    ],
+    "color_off": [
+        64,
+        0,
+        0
+    ]
+}

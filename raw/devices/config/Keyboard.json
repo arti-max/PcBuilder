@@ -1,0 +1,52 @@
+{
+    "x": 30,
+    "y": 350,
+    "width": 480,
+    "height": 220,
+    "visible": true,
+    "accepts_keyboard_input": true,
+    "serial_number": 78,
+    "key_width": 35,
+    "key_height": 35,
+    "gap_size": 3,
+    "background_color": [
+        40,
+        40,
+        40
+    ],
+    "frame_color": [
+        60,
+        60,
+        60
+    ],
+    "key_color": [
+        50,
+        50,
+        50
+    ],
+    "key_pressed_color": [
+        0,
+        180,
+        60
+    ],
+    "key_text_color": [
+        200,
+        200,
+        200
+    ],
+    "border_color": [
+        100,
+        100,
+        100
+    ],
+    "arrow_key_color": [
+        70,
+        70,
+        70
+    ],
+    "special_key_color": [
+        65,
+        65,
+        65
+    ]
+}
