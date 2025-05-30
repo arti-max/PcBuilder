@@ -1,0 +1,145 @@
+{
+    "editor": {
+        "font_family": "Consolas",
+        "font_size": 11,
+        "tab_width": 4,
+        "line_numbers": true,
+        "word_wrap": false,
+        "auto_indent": true,
+        "highlight_current_line": true,
+        "auto_save_interval": 300
+    },
+    "theme": {
+        "background": "#1e1e1e",
+        "foreground": "#ffffff",
+        "keyword_color": "#569cd6",
+        "comment_color": "#6a9955",
+        "string_color": "#ce9178",
+        "number_color": "#b5cea8",
+        "label_color": "#dcdcaa",
+        "current_line": "#2d2d2d",
+        "name": "VS Code Dark",
+        "register_color": "#9cdcfe",
+        "directive_color": "#c586c0",
+        "operator_color": "#d4d4d4",
+        "error_color": "#f44747",
+        "address_color": "#4fc1ff",
+        "selection": "#264f78"
+    },
+    "compiler": {
+        "path": "C:\\Users\\student\\Desktop\\PcBuilder-main\\extensions\\asm\\Assembler.py",
+        "default_output": "bin",
+        "auto_save_before_compile": true,
+        "show_warnings": true,
+        "validate_before_compile": true
+    },
+    "autocomplete": {
+        "enabled": true,
+        "case_sensitive": false,
+        "min_chars": 1,
+        "show_descriptions": true,
+        "auto_insert_templates": true
+    },
+    "navigator": {
+        "auto_update": true,
+        "group_by_type": true,
+        "show_line_numbers": true,
+        "expand_groups": true
+    },
+    "file_manager": {
+        "auto_backup": true,
+        "backup_interval": 600,
+        "max_backups": 10,
+        "resolve_imports": true,
+        "cleanup_temp_files": true
+    },
+    "window": {
+        "width": 1200,
+        "height": 800,
+        "remember_size": true,
+        "remember_position": true,
+        "last_x": 100,
+        "last_y": 100
+    },
+    "recent_files": [
+        "C:/Users/student/Desktop/PcBuilder-main/extensions/asm/code/prog1.asm",
+        "C:/Users/student/Desktop/PcBuilder-main/extensions/asm/code/bios.asm"
+    ],
+    "project_settings": {
+        "last_project": null,
+        "auto_open_last": false,
+        "default_templates": true
+    },
+    "compiler_path": {
+        "path": "C:/Users/student/Desktop/PcBuilder-main/extensions/asm/Assembler.py"
+    },
+    "advanced": {
+        "editor": {
+            "auto_save": true,
+            "auto_save_interval": 5,
+            "highlight_matching_brackets": true,
+            "highlight_current_line": true,
+            "show_whitespace": false,
+            "virtual_space": false,
+            "smooth_scrolling": true,
+            "code_folding": true,
+            "show_gutter_icons": true,
+            "show_indentation_guides": true,
+            "show_parameter_hints": true,
+            "auto_import": true,
+            "show_line_endings": false
+        },
+        "compiler": {
+            "output_dir": "C:/Users/student/Desktop/PcBuilder-main/extensions/asm/boot",
+            "tape_dir": "C:/Users/student/Desktop/PcBuilder-main/extensions/asm/tapes",
+            "error_reporting": true,
+            "warnings_as_errors": false,
+            "verbose_output": true,
+            "optimize": true,
+            "auto_run_after_compile": false
+        },
+        "appearance": {
+            "show_status_bar": true,
+            "show_toolbar": true,
+            "show_line_numbers": true,
+            "show_scrollbars": true,
+            "use_native_file_dialogs": true,
+            "tool_window_animations": true,
+            "editor_zoom_level": 100
+        },
+        "keyboard": {
+            "use_vim_emulation": false,
+            "show_keybindings_popup": true,
+            "keyboard_shortcuts": {}
+        },
+        "terminal": {
+            "font_family": "Consolas",
+            "font_size": 11,
+            "background_color": "#1E1E1E",
+            "foreground_color": "#CCCCCC",
+            "buffer_size": 1000,
+            "use_system_shell": true
+        },
+        "project": {
+            "default_assembly_directory": "extensions/asm/code",
+            "search_depth": 3,
+            "auto_detect_files": true,
+            "default_encoding": "utf-8",
+            "auto_open_last_project": true
+        },
+        "backup": {
+            "create_backups": true,
+            "backup_directory": ".backups",
+            "max_backup_files": 10,
+            "backup_interval": 10,
+            "include_timestamp": true
+        },
+        "import": {
+            "resolve_imports": true,
+            "recursive_imports": true,
+            "create_import_cache": true,
+            "detect_circular_imports": true,
+            "import_dirs": []
+        }
+    }
+}
