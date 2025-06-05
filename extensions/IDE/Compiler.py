@@ -76,49 +76,64 @@ class CompilerIntegration:
         print("❌ Ассемблер не найден")
         return None
     
-    def compile_file(self, file_path, output_type="bin", metadata=None):
+    def compile_file(self, file_path, output_type="bin", output_path=None, metadata=None):
         """Компиляция файла"""
         if self.is_compiling:
             self.ide.update_status("⚠️ Компиляция уже выполняется")
             return
-        
+
         assembler_path = self.get_assembler_path()
         if not assembler_path:
             messagebox.showerror("Ошибка", 
-                               "Ассемблер не найден!\nУстановите путь в настройках.")
+                            "Ассемблер не найден!\nУстановите путь в настройках.")
             return
-        
+
         # Автосохранение если включено
         settings = self.ide.settings.load_settings()
         if settings.get('compiler', {}).get('auto_save_before_compile', True):
             if self.ide.is_modified:
                 self.ide.save_file()
-        
+
         # Обработка импортов
         try:
             processed_file = self.ide.file_manager.resolve_imports(file_path)
         except Exception as e:
             self.ide.update_status(f"❌ Ошибка обработки импортов: {e}")
             return
-        
+
+        # ИСПРАВЛЕНИЕ: Обработка выходных путей
+        compile_params = {
+            'file_path': processed_file,
+            'output_type': output_type,
+            'metadata': metadata,
+            'output_path': output_path,
+            'is_merged': file_path != processed_file
+        }
+
         # Запуск компиляции в отдельном потоке
         self.is_compiling = True
         self.compile_thread = threading.Thread(
             target=self._compile_worker,
-            args=(processed_file, output_type, metadata, file_path != processed_file)
+            args=(compile_params,)
         )
         self.compile_thread.daemon = True
         self.compile_thread.start()
     
-    def _compile_worker(self, file_path, output_type, metadata, is_merged):
+    def _compile_worker(self, params):
         """Рабочий поток компиляции"""
         try:
             self.ide.update_status("🔧 Компиляция...")
             
+            file_path = params['file_path']
+            output_type = params['output_type']
+            metadata = params['metadata']
+            output_path = params['output_path']
+            is_merged = params['is_merged']
+            
             # Подготовка команды
             cmd = [sys.executable, self.get_assembler_path(), file_path]
             
-            # Добавляем параметры в зависимости от типа вывода
+            # ИСПРАВЛЕНИЕ: Обработка различных типов вывода
             if output_type == "tape":
                 cmd.append("--tape")
                 
@@ -138,9 +153,23 @@ class CompilerIntegration:
                     cmd.extend(['--author', metadata['author']])
                 if 'description' in metadata:
                     cmd.extend(['--description', metadata['description']])
+                
                     
             elif output_type == "both":
                 cmd.append("--both")
+                
+                # Для "both" тоже добавляем метаданные если есть
+                if metadata:
+                    if 'name' in metadata:
+                        cmd.extend(['--name', metadata['name']])
+                    if 'author' in metadata:
+                        cmd.extend(['--author', metadata['author']])
+                    if 'description' in metadata:
+                        cmd.extend(['--description', metadata['description']])
+            
+            # Для BIN компиляции не добавляем специальные параметры
+            # так как всегда создается 0.bin и опционально 1.bin
+            cmd.extend(['--output', output_path])
             
             # Добавляем флаг для показа информации
             cmd.append("--info")
@@ -169,10 +198,20 @@ class CompilerIntegration:
             if result.returncode == 0:
                 # Успешная компиляция
                 output_info = self._parse_compile_output(result.stdout)
-                success_msg = f"✅ Компиляция завершена успешно"
                 
-                if output_info:
-                    success_msg += f" ({output_info})"
+                if output_type == "bin":
+                    success_msg = "✅ BIN файлы созданы успешно"
+                    if output_info:
+                        success_msg += f" ({output_info})"
+                    success_msg += " (0.bin и возможно 1.bin в папке bios/)"
+                elif output_type == "tape":
+                    success_msg = "✅ TAPE кассета создана успешно"
+                    if output_info:
+                        success_msg += f" ({output_info})"
+                else:  # both
+                    success_msg = "✅ BIN и TAPE файлы созданы успешно"
+                    if output_info:
+                        success_msg += f" ({output_info})"
                 
                 self.ide.update_status(success_msg)
                 

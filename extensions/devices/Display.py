@@ -7,8 +7,8 @@ class Display(Device):
         super().__init__(canvas, "Display")
         
         # Параметры дисплея (увеличенные)
-        self.display_width = 16
-        self.display_height = 16
+        self.display_width = 32
+        self.display_height = 32
         self.pixel_size = self.config.get("pixel_size", 16)
         self.gap_size = self.config.get("gap_size", 2)
         

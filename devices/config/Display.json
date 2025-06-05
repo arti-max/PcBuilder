@@ -1,0 +1,42 @@
+{
+    "x": 30,
+    "y": 10,
+    "width": 400,
+    "height": 320,
+    "visible": true,
+    "accepts_keyboard_input": false,
+    "pixel_size": 8,
+    "gap_size": 2,
+    "pixel_on_color": [
+        0,
+        255,
+        80
+    ],
+    "pixel_off_color": [
+        0,
+        30,
+        10
+    ],
+    "background_color": [
+        10,
+        10,
+        10
+    ],
+    "border_color": [
+        100,
+        100,
+        100
+    ],
+    "scan_color": [
+        0,
+        150,
+        255
+    ],
+    "frame_color": [
+        60,
+        60,
+        60
+    ],
+    "scan_mode": "line_scan",
+    "serial_number": 79
+}

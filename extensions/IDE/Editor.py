@@ -99,6 +99,14 @@ class CodeEditor:
         
         # Синхронизация при прокрутке
         self.text_widget.bind('<Configure>', self.on_text_configure)
+        
+    def show_find_dialog(self):
+        """Показ диалога поиска"""
+        self.find_dialog = FindDialog(self.text_widget)
+
+    def show_replace_dialog(self):
+        """Показ диалога замены"""
+        self.replace_dialog = ReplaceDialog(self.text_widget)
     
     def on_text_scroll(self, *args):
         """ИСПРАВЛЕННАЯ обработка прокрутки текста"""
@@ -211,6 +219,52 @@ class CodeEditor:
         self.text_widget.bind('<Return>', self.auto_indent)
         self.text_widget.bind('<Tab>', self.handle_tab)
         self.text_widget.bind('<Shift-Tab>', self.handle_shift_tab)
+        
+        # ИСПРАВЛЕНИЕ: Добавляем события для подсветки и автодополнения
+        self.text_widget.bind('<KeyPress>', self.on_key_press)
+        self.text_widget.bind('<KeyRelease>', self.on_key_release)
+        self.text_widget.bind('<Button-1>', self.on_click)
+        self.text_widget.bind('<ButtonRelease-1>', self.on_button_release)
+        
+        # События для автодополнения
+        self.text_widget.bind('<Control-space>', self.force_autocomplete)
+        
+    def on_button_release(self, event):
+        """Обработка отпускания кнопки мыши"""
+        self.update_cursor_info()
+        # Скрываем автодополнение при клике
+        if hasattr(self, 'autocomplete'):
+            self.autocomplete.hide_popup()
+        
+    def force_autocomplete(self, event=None):
+        """Принудительный вызов автодополнения"""
+        if hasattr(self, 'autocomplete') and self.autocomplete.enabled:
+            self.autocomplete.check_autocomplete()
+        return 'break'
+        
+    def on_click(self, event):
+        """Обработка клика мыши"""
+        # Скрываем автодополнение при клике
+        if hasattr(self, 'autocomplete'):
+            self.autocomplete.hide_popup()
+        
+    def on_key_press(self, event):
+        """Обработка нажатия клавиш"""
+        # Сохраняем состояние для отмены
+        if event.keysym not in ['Up', 'Down', 'Left', 'Right', 'Shift_L', 'Shift_R', 'Control_L', 'Control_R']:
+            self.save_undo_state()
+
+    def on_key_release(self, event):
+        """Обработка отпускания клавиш"""
+        # ИСПРАВЛЕНИЕ: Подсветка синтаксиса при вводе
+        if event.keysym not in ['Up', 'Down', 'Left', 'Right', 'Shift_L', 'Shift_R', 'Control_L', 'Control_R']:
+            # Планируем подсветку синтаксиса
+            self.text_widget.after_idle(self.syntax_highlighter.highlight_syntax)
+        
+        # ИСПРАВЛЕНИЕ: Проверяем автодополнение
+        if hasattr(self, 'autocomplete') and self.autocomplete.enabled:
+            if event.keysym.isalnum() or event.keysym in ['period', 'underscore']:
+                self.text_widget.after_idle(self.autocomplete.check_autocomplete)
     
     def on_text_modified(self, event):
         """Обработка изменения текста"""
@@ -330,13 +384,22 @@ class CodeEditor:
         """Установка содержимого редактора"""
         self.text_widget.delete('1.0', 'end')
         self.text_widget.insert('1.0', content)
+        # ИСПРАВЛЕНИЕ: Принудительно вызываем подсветку
         self.syntax_highlighter.highlight_syntax()
         self.update_line_numbers()
+        # Обновляем автодополнение
+        if hasattr(self, 'autocomplete'):
+            self.autocomplete.hide_popup()
     
     def clear(self):
         """Очистка редактора"""
         self.text_widget.delete('1.0', 'end')
         self.update_line_numbers()
+        # ИСПРАВЛЕНИЕ: Добавляем подсветку синтаксиса для нового файла
+        self.syntax_highlighter.highlight_syntax()
+        # Скрываем автодополнение
+        if hasattr(self, 'autocomplete'):
+            self.autocomplete.hide_popup()
     
     def apply_settings(self, settings):
         """Применение настроек"""
@@ -358,9 +421,16 @@ class CodeEditor:
         self.text_widget.config(bg=bg_color, fg=fg_color)
         self.line_numbers.config(bg='#3c3c3c', fg='#888888')
         
-        # Обновляем подсветку синтаксиса
-        self.syntax_highlighter.update_colors(theme_settings)
-        self.syntax_highlighter.highlight_syntax()
+        # ИСПРАВЛЕНИЕ: Обновляем подсветку синтаксиса с новыми настройками
+        if hasattr(self, 'syntax_highlighter'):
+            self.syntax_highlighter.update_colors(theme_settings)
+            # Принудительно применяем подсветку
+            self.text_widget.after_idle(self.syntax_highlighter.highlight_syntax)
+        
+        # ИСПРАВЛЕНИЕ: Обновляем настройки автодополнения
+        if hasattr(self, 'autocomplete'):
+            autocomplete_settings = settings.get('autocomplete', {})
+            self.autocomplete.update_settings(autocomplete_settings)
         
         # Размер табуляции
         tab_width = editor_settings.get('tab_width', 4)

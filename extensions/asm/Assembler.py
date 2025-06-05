@@ -67,9 +67,9 @@ class Assembler:
         
         if output_type in ["bin", "both"]:
             print(" Сохранение BIN файлов...")
-            self.compiler.save_to_files(binary_data, "boot")
+            self.compiler.save_to_files(binary_data, output_path)
             results["bin"] = binary_data
-            print("    BIN файлы сохранены в boot/")
+            print(f"    BIN файлы сохранены в {output_path}/")
         
         if output_type in ["tape", "both"]:
             print(" Создание TAPE файла...")

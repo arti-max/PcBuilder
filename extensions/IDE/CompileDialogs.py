@@ -93,22 +93,14 @@ class CompileDialog:
                               bg='#2b2b2b', fg='white', font=('Consolas', 14, 'bold'))
         title_label.pack(anchor='w', pady=(0, 20))
         
-        # Название файла
-        tk.Label(parent, text="Название файла:", bg='#2b2b2b', fg='white').pack(anchor='w', pady=(0, 5))
-        self.filename_var = tk.StringVar(value="program")
-        filename_entry = tk.Entry(parent, textvariable=self.filename_var, bg='#3c3c3c', fg='white',
-                                 insertbackground='white', font=('Consolas', 10))
-        filename_entry.pack(fill=tk.X, pady=(0, 15))
-        filename_entry.focus_set()
-        
         # Путь сохранения
         tk.Label(parent, text="Папка сохранения:", bg='#2b2b2b', fg='white').pack(anchor='w', pady=(0, 5))
         
         path_frame = tk.Frame(parent, bg='#2b2b2b')
         path_frame.pack(fill=tk.X, pady=(0, 15))
         
-        self.output_dir_var = tk.StringVar(value="bios")
-        path_entry = tk.Entry(path_frame, textvariable=self.output_dir_var, bg='#3c3c3c', fg='white',
+        self.output_path_var = tk.StringVar(value="bios")
+        path_entry = tk.Entry(path_frame, textvariable=self.output_path_var, bg='#3c3c3c', fg='white',
                              insertbackground='white', font=('Consolas', 10))
         path_entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
         
@@ -143,7 +135,7 @@ class CompileDialog:
         """Выбор папки для BIN файлов"""
         dirname = filedialog.askdirectory(title="Выберите папку для сохранения")
         if dirname:
-            self.output_dir_var.set(dirname)
+            self.output_path_var.set(dirname)
     
     def compile(self):
         """Компиляция с параметрами"""
@@ -163,15 +155,10 @@ class CompileDialog:
                 'output_path': self.output_path_var.get().strip()
             }
         else:
-            # BIN компиляция
-            if not self.filename_var.get().strip():
-                messagebox.showerror("Ошибка", "Введите название файла")
-                return
             
             self.result = {
                 'type': 'bin',
-                'filename': self.filename_var.get().strip(),
-                'output_dir': self.output_dir_var.get().strip(),
+                'output_dir': self.output_path_var.get().strip(),
                 'overwrite': self.overwrite_var.get(),
                 'create_backup': self.create_backup_var.get()
             }

@@ -64,9 +64,20 @@ class TabManager:
         from Editor import CodeEditor
         editor = CodeEditor(tab_frame, self.ide)
         
+        # ИСПРАВЛЕНИЕ: Применяем настройки к новому редактору
+        if hasattr(self.ide, 'settings'):
+            settings = self.ide.settings.load_settings()
+            # Объединяем с расширенными настройками
+            if hasattr(self.ide, 'advanced_settings'):
+                settings = self.ide.advanced_settings.merge_with_settings(settings)
+            editor.apply_settings(settings)
+        
         # Устанавливаем содержимое
         if content:
             editor.set_content(content)
+        else:
+            # ИСПРАВЛЕНИЕ: Для пустого файла тоже нужна подсветка
+            editor.clear()
         
         # Определяем заголовок вкладки
         if title:
@@ -95,6 +106,11 @@ class TabManager:
         
         # Обновляем текущий редактор в IDE
         self.ide.editor = editor
+        self.ide.current_file = file_path
+        self.ide.is_modified = False
+        
+        # ИСПРАВЛЕНИЕ: Обновляем заголовок и статус
+        self.ide.update_title()
         
         return tab_id
     

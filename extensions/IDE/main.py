@@ -33,7 +33,6 @@ class PCBuilderIDE:
         
         # Инициализация компонентов
         self.settings = SettingsManager()
-        self.advanced_settings = AdvancedSettings(self)
         self.file_manager = FileManager(self)
         self.import_manager = ImportManager(self)
         self.compiler = CompilerIntegration(self)
@@ -159,7 +158,6 @@ class PCBuilderIDE:
         settings_menu = tk.Menu(menubar, tearoff=0, bg='#3c3c3c', fg='white')
         menubar.add_cascade(label="Настройки", menu=settings_menu)
         settings_menu.add_command(label="Настройки IDE", command=self.open_settings)
-        settings_menu.add_command(label="Расширенные настройки", command=self.open_advanced_settings)
         settings_menu.add_command(label="Выбрать компилятор", command=self.select_compiler)
         settings_menu.add_separator()
         settings_menu.add_command(label="Настройки редактора", command=self.editor_settings)
@@ -287,12 +285,11 @@ class PCBuilderIDE:
     def load_settings(self):
         """Загрузка настроек"""
         settings = self.settings.load_settings()
-        settings = self.advanced_settings.merge_with_settings(settings)
         self.apply_settings(settings)
     
     def apply_settings(self, settings):
         """Применение настроек"""
-        appearance = settings.get('advanced', {}).get('appearance', {})
+        appearance = settings.get('appearance', {})
         
         if not appearance.get('show_toolbar', True):
             self.toolbar.pack_forget()
@@ -301,14 +298,15 @@ class PCBuilderIDE:
         if not appearance.get('show_status_bar', True):
             self.status_bar.pack_forget()
             self.show_statusbar_var.set(False)
-    
+        
     def setup_autosave(self):
         """Настройка автосохранения"""
-        auto_save = self.advanced_settings.get_setting('editor', 'auto_save', False)
+        auto_save = self.settings.get_setting('editor', 'auto_save', False)
         
         if auto_save:
-            interval = self.advanced_settings.get_setting('editor', 'auto_save_interval', 5) * 60 * 1000
+            interval = self.settings.get_setting('editor', 'auto_save_interval', 5) * 60 * 1000
             self.schedule_autosave(interval)
+
     
     def schedule_autosave(self, interval):
         """Планирование автосохранения"""
@@ -508,8 +506,7 @@ class PCBuilderIDE:
             self.compiler.compile_file(
                 self.current_file, 
                 "bin", 
-                output_dir=result.get('output_dir'),
-                filename=result.get('filename')
+                output_path=result.get('output_dir')
             )
     
     def compile_to_tape(self):
@@ -518,16 +515,19 @@ class PCBuilderIDE:
             if not self.save_file():
                 return
                 
+        # Открываем диалог настроек компиляции
         dialog = CompileDialog(self.root, "tape")
         result = dialog.show()
         
         if result:
+            # Автосохранение перед компиляцией
             if self.is_modified:
                 self.save_file()
             
+            # ИСПРАВЛЕНИЕ: Передаем параметры правильно
             self.compiler.compile_file(
                 self.current_file, 
-                "tape", 
+                "tape",
                 output_path=result.get('output_path'),
                 metadata=result.get('metadata')
             )
@@ -538,9 +538,11 @@ class PCBuilderIDE:
             if not self.save_file():
                 return
         
+        # Автосохранение перед компиляцией
         if self.is_modified:
             self.save_file()
         
+        # ИСПРАВЛЕНИЕ: Упрощенный вызов
         self.compiler.compile_file(self.current_file, "both")
     
     def stop_compilation(self):

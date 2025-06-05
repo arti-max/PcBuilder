@@ -12,6 +12,10 @@ class SyntaxHighlighter:
         self.setup_patterns()
         
         print("🎨 Подсветка синтаксиса инициализирована")
+        
+    def force_highlight(self):
+        """Принудительная подсветка синтаксиса"""
+        self.text_widget.after_idle(self.highlight_syntax)
     
     def setup_tags(self):
         """Настройка тегов для подсветки"""
@@ -96,18 +100,28 @@ class SyntaxHighlighter:
     
     def highlight_syntax(self):
         """Основная функция подсветки синтаксиса"""
-        # Получаем весь текст
-        content = self.text_widget.get('1.0', 'end-1c')
+        try:
+            # Получаем весь текст
+            content = self.text_widget.get('1.0', 'end-1c')
+            
+            # Удаляем все существующие теги
+            for tag_name in self.colors.keys():
+                self.text_widget.tag_remove(tag_name, '1.0', 'end')
+            
+            # ИСПРАВЛЕНИЕ: Проверяем, есть ли текст для подсветки
+            if not content.strip():
+                return
+            
+            # Применяем подсветку построчно для лучшей производительности
+            lines = content.split('\n')
+            for line_num, line in enumerate(lines, 1):
+                if line.strip():  # Подсвечиваем только непустые строки
+                    self.highlight_line(line_num, line)
         
-        # Удаляем все существующие теги
-        for tag_name in self.colors.keys():
-            self.text_widget.tag_remove(tag_name, '1.0', 'end')
+        except tk.TclError:
+            # Игнорируем ошибки во время обновления виджета
+            pass
         
-        # Применяем подсветку построчно для лучшей производительности
-        lines = content.split('\n')
-        for line_num, line in enumerate(lines, 1):
-            self.highlight_line(line_num, line)
-    
     def highlight_line(self, line_num, line_content):
         """Подсветка одной строки"""
         line_start = f'{line_num}.0'

@@ -1,0 +1,41 @@
+{
+    "x": 660,
+    "y": 500,
+    "width": 120,
+    "height": 80,
+    "visible": true,
+    "accepts_keyboard_input": false,
+    "serial_number": 47,
+    "device_width": 120,
+    "device_height": 80,
+    "background_color": [
+        40,
+        40,
+        40
+    ],
+    "frame_color": [
+        60,
+        60,
+        60
+    ],
+    "border_color": [
+        100,
+        100,
+        100
+    ],
+    "speaker_color": [
+        80,
+        80,
+        80
+    ],
+    "active_color": [
+        255,
+        100,
+        100
+    ],
+    "text_color": [
+        200,
+        200,
+        200
+    ]
+}

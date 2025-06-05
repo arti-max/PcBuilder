@@ -57,12 +57,14 @@ class Cpu:
         
         # Вычисляем физический адрес стека
         stack_address = self._calculate_stack_address()
+        print("Stack Addr Push: ", stack_address)
         self.ram.write(stack_address, data)
         
         
     def pop(self):
         # Сначала читаем данные, затем увеличиваем SP
         stack_address = self._calculate_stack_address()
+        print("Stack Addr Pop: ", stack_address)
         data = self.ram.read(stack_address)
         
         sp = self.registers[0x07].read()

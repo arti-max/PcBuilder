@@ -71,17 +71,21 @@ class AutocompleteManager:
         if not self.enabled:
             return
         
-        # Получаем текущее слово
-        current_word = self.get_current_word()
-        
-        if len(current_word) >= self.min_chars:
-            suggestions = self.get_suggestions(current_word)
+        try:
+            # Получаем текущее слово
+            current_word = self.get_current_word()
             
-            if suggestions:
-                self.show_popup(suggestions)
+            if len(current_word) >= self.min_chars:
+                suggestions = self.get_suggestions(current_word)
+                
+                if suggestions:
+                    self.show_popup(suggestions)
+                else:
+                    self.hide_popup()
             else:
                 self.hide_popup()
-        else:
+        except Exception as e:
+            print(f"Ошибка автодополнения: {e}")
             self.hide_popup()
     
     def get_current_word(self):
@@ -232,14 +236,21 @@ class AutocompleteManager:
     def hide_popup(self):
         """Скрытие popup"""
         if self.popup_window:
-            self.popup_window.destroy()
+            try:
+                self.popup_window.destroy()
+            except:
+                pass
             self.popup_window = None
             self.listbox = None
         
-        # Убираем привязки
-        self.text_widget.unbind('<Down>')
-        self.text_widget.unbind('<Up>')
-        self.text_widget.unbind('<Tab>')
+        # ИСПРАВЛЕНИЕ: Убираем привязки безопасно
+        try:
+            self.text_widget.unbind('<Down>')
+            self.text_widget.unbind('<Up>')
+            self.text_widget.unbind('<Tab>')
+            self.text_widget.unbind('<Escape>')
+        except:
+            pass
     
     def handle_down_arrow(self, event):
         """Обработка стрелки вниз"""
@@ -345,9 +356,11 @@ class AutocompleteManager:
                 self.text_widget.tag_add('sel', arg_start, arg_end)
                 self.text_widget.mark_set(tk.INSERT, arg_end)
     
+    
     def update_settings(self, settings):
         """Обновление настроек автодополнения"""
-        autocomplete_settings = settings.get('autocomplete', {})
-        self.enabled = autocomplete_settings.get('enabled', True)
-        self.case_sensitive = autocomplete_settings.get('case_sensitive', False)
-        self.min_chars = autocomplete_settings.get('min_chars', 1)
+        self.enabled = settings.get('enabled', True)
+        self.case_sensitive = settings.get('case_sensitive', False)
+        self.min_chars = settings.get('min_chars', 1)
+        
+        print(f"Автодополнение: {'включено' if self.enabled else 'выключено'}")

@@ -40,7 +40,7 @@ class ControlUnit:
 
     def execute(self, opcode_name):
         
-        #print(f"{opcode_name} : {hex(self.cpu.registers[0x05].read()-1)} | {self.cpu.registers}")
+        print(f"{opcode_name} : {hex(self.cpu.registers[0x05].read()-1)} | {self.cpu.registers}")
         
         if opcode_name == "nop":
             pass
@@ -168,6 +168,9 @@ class ControlUnit:
             low = self.cpu.registers[0x06].read()
             
             addr = (high << 8) | low
+            
+            print("JMP: ", hex(addr), hex(low), hex(high))
+            
             self.cpu.registers[0x05].write(addr)
             
         elif opcode_name == "je_addr":

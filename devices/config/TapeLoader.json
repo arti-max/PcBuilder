@@ -1,0 +1,51 @@
+{
+    "x": 470,
+    "y": 50,
+    "width": 300,
+    "height": 200,
+    "visible": true,
+    "accepts_keyboard_input": false,
+    "serial_number": 122,
+    "device_width": 300,
+    "device_height": 200,
+    "background_color": [
+        40,
+        40,
+        40
+    ],
+    "frame_color": [
+        60,
+        60,
+        60
+    ],
+    "border_color": [
+        100,
+        100,
+        100
+    ],
+    "tape_color": [
+        139,
+        69,
+        19
+    ],
+    "reel_color": [
+        80,
+        80,
+        80
+    ],
+    "led_on_color": [
+        255,
+        0,
+        0
+    ],
+    "led_off_color": [
+        60,
+        0,
+        0
+    ],
+    "text_color": [
+        200,
+        200,
+        200
+    ]
+}
